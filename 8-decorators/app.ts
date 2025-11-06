@@ -1,9 +1,11 @@
-// (decorator and the constructor from the decorator) are executed before the class 
 // all decorators can be executed without instanciating an object of the class
-const Logger = (logString: string) =>
+const Logger = (logString: string) =>  // decorator factory
 {
+    // decorator factory ("Logger" or "RenderElement") is a function that returns a decorator
+    // TypeScript executes decorator factories immediately (when the class is defined — not instantiated).
+    // Then, it executes the decorator functions themselves from bottom to top.
     console.log("LOGGER FACTORY")
-    return (constructor: Function) =>
+    return (constructor: Function) => // decorator function
     {
         console.log(logString);
         console.log(constructor);
@@ -22,20 +24,37 @@ const RenderElement = (template: string, elementClassName: string) =>
         console.log("decorator functions: ", person1)
     }
 }
-// execution of decorator factories happen(when there is multiple decorators) from bottom to top >>> log >> LOGGER FACTORY >>> TEMPLATE FACTORY
-// execution of decorator function happen(when there is multiple decorators) from bottom to top
 
 @Logger("LOGGING - PERSON")
 @RenderElement("<h1>Hello from the other side</h1>", ".id")
 class Person
 {
     name="Abdallah";
-
+    
     constructor()
     {
         console.log("Creating Person Object");
     }
 }
+/** final output >>> 
+ * 
+
+
+// execution of decorator factories happen(when there is multiple decorators) from top to bottom >> LOGGER FACTORY >>> TEMPLATE FACTORY
+// then executes the constructor of the class  >>>> Creating Person Object
+// execution of decorator function happen(when there is multiple decorators) from bottom to top >>> decorator functions: Person {name: 'Abdallah'} >>> LOGGING - PERSON
+// Decorator factories execute top to bottom:
+// Decorator functions execute bottom to top:
+
+
+    LOGGER FACTORY
+    TEMPLATE FACTORY
+    Creating Person Object
+    decorator functions: Person {name: 'Abdallah'}
+    LOGGING - PERSON
+ */
+
+
 
 // const person1 = new Person();
 // console.log(person1)
@@ -47,22 +66,22 @@ const Log = (target: any, name: string) =>
     console.log(target, name) // property name
 }
 // ------------------------------------ Accessor decorator
-const Log2 = (targer: any, name: string, descriptor: PropertyDescriptor) =>// 3rd param is for setter and getter
+const Log2 = (target: any, name: string, descriptor: PropertyDescriptor) =>// 3rd param is for setter and getter
 {
     console.log("Accessor decorator");
-    console.log(targer, name, descriptor); // name of the accessing function
+    console.log(target, name, descriptor); // name of the accessing function
 }
 // ------------------------------------ Method decorator
-const Log3 = (targer: any, name: string, descriptor: PropertyDescriptor) =>
+const Log3 = (target: any, name: string, descriptor: PropertyDescriptor) =>
 {
     console.log("Method decorator");
-    console.log(targer, name, descriptor); // name of the method
+    console.log(target, name, descriptor); // name of the method
 }
 // ------------------------------------ Parameter decorator
-const Log4 = (targer: any, name: string, parameterIndex: number) =>
+const Log4 = (target: any, name: string, parameterIndex: number) =>
 {
     console.log("Parameter decorator");
-    console.log(targer, name, parameterIndex); // name of the method that has the parameter
+    console.log(target, name, parameterIndex); // name of the method that has the parameter
 }
 
 class Product
