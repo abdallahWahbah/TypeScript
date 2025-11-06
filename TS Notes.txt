@@ -1,0 +1,158 @@
+// installing TS (for the first time only)
+# npm install -g typescript
+
+--------------------------------------------
+
+// how to run ts file
+# tsc file-name.ts
+- this will compile (if there is no errors) the file-name.ts to file-name.ts >>>> don't forget to import the script in the HTML file
+
+--------------------------------------------
+
+// automatic refresh
+# npm init
+- choose defaults (press enter many times)
+- it will create package.json 
+# npm install --save-dev lite-server
+- open package.json and add "start": "lite-server"
+# npm start 
+# tsc app.ts -w
+-w or --watch
+
+// if you have multiple ts files and you want to compile all of them
+# tsc --init (only one time for the whole project until production)
+# npm start
+# tsc -w
+// don't forget to import the script you want to be executed in html file
+
+--------------------------------------------
+
+// javascript uses dynamic types resolved at runtime, typescript uses static types set during development
+// TS types are checked during compilation, JS types are checked during runtime
+
+--------------------------------------------
+
+// union types, literal types, alias / custom type
+
+// to accept 2 different types of values, we use union types >>> to tell ts we are fine with (for example) numbers or strings
+// literal types: to assign certain values instead of types
+
+type Combinable = number | string;
+const combine = (
+    input1: number | string, 
+    input2: Combinable, // the same as the above live 
+    resultConversion: 'as-number' | 'as-text'
+) => 
+{
+  if(resultConversion === "as-number") return +input1 + +input2;
+  else return input1.toString() + input2.toString();
+}
+
+const combinedNumbers = combine(2, 4, "as-number");
+console.log(combinedNumbers) // 6
+
+const combinedAges = combine("2", "4", "as-number");
+console.log(combinedAges) // 6
+
+const combinedNames = combine("Abdallah", "Wahbah", "as-text");
+console.log(combinedNames) // AbdallahWahbah
+
+--------------------------------------------
+
+// webpack
+// when you use es6 modules, every file needs an http request to be compiled (which takes some time even if it is small), this is thy we use webpack to reduce http requests
+// webpack is a toll used to reduce http requests by bundling code together in one file, also it optimizes code, less code to download, compiles ts code to js 
+
+# npm install --save-dev webpack webpack-cli webpack-dev-server typescript ts-loader
+
+- open tsconfig.json file and make sure of the following
+"target": "es6",
+"module": "ES2015",
+"outDir": "./dist",
+comment (no need for rootDir) "rootDir": "./src", 
+"sourceMap": true, >>>>>>>>>>> for debugging
+
+- create webpack.config.js
+- add and change script to package.json 
+"build":"webpack"
+"start": "webpack-dev-server",
+
+# npm run build
+- import bundle.js script in the HTML document
+#npm run start
+
+
+--------------------------------------------
+
+// class-transformer >>>>>> https://github.com/typestack/class-transformer?tab=readme-ov-file#installation
+// to convert every object in an array to an instance of a certain class
+
+# npm install class-transformer --save
+# npm install reflect-metadata --save
+
+// and make sure to import it in a global place, like app.ts:
+import 'reflect-metadata';
+import { plainToInstance } from 'class-transformer';
+
+
+class Product 
+{
+    constructor(public title: string, public peice: number){}
+} 
+const products = [
+  { title: 'A Carpet', price: 29.99 },
+  { title: 'A Book', price: 10.99 }
+];
+// const loadedProducts = products.map(prod => {
+//   return new Product(prod.title, prod.price);
+// });
+
+const loadedProducts = plainToInstance(Product, products);
+
+--------------------------------------------
+
+// validation: class-validator >>> https://github.com/typestack/class-validator?tab=readme-ov-file#installation
+# npm install class-validator --save
+
+// don't forget to uncomment the experimentalDecorators in the tsconfig.json file
+
+--------------------------------------------
+
+// react with typescript >>>>> https://create-react-app.dev/docs/adding-typescript/
+
+# npx create-react-app my-app --template typescript
+# npm start
+
+
+// you can use any external library to ts react project, and if it doesn't support ts >>>
+// after installing the library (ex: react-router-dom) # npm install --save @types/react-router-dom
+--------------------------------------------
+
+
+--------------------------------------------
+
+
+--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
